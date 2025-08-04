@@ -1,0 +1,18 @@
+{
+    "title": "Baptism",
+    "speaker": "Denis",
+    "folder_name": "Baptism_Denis_20250803161713",
+    "member_id": 1,
+    "started_at": "2025-08-03 18:17:22",
+    "completed_at": "2025-08-03 18:17:22",
+    "total_chunks": 1,
+    "total_duration_seconds": 7,
+    "total_size_bytes": 125589,
+    "chunk_files": [
+        {
+            "filename": "chunk_000.webm",
+            "index": 0,
+            "size": 125589
+        }
+    ]
+}

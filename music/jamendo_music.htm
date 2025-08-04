@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>God's Appointed Music Player</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #121212;
+      color: #f1f1f1;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: #4caf50;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #4caf50aa;
+    }
+    #search-container {
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      gap: 0.5rem;
+    }
+    #searchInput {
+      flex-grow: 1;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 0 10px #4caf5077;
+      background-color: #222;
+      color: #eee;
+      transition: box-shadow 0.3s ease;
+    }
+    #searchInput:focus {
+      box-shadow: 0 0 15px #4caf50cc;
+    }
+    #searchBtn {
+      background-color: #4caf50;
+      border: none;
+      padding: 0 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px #4caf50cc;
+      transition: background-color 0.3s ease;
+    }
+    #searchBtn:hover {
+      background-color: #3e8e41;
+    }
+    #tracks {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .track {
+      background: #222;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 10px #000000aa;
+      transition: transform 0.2s ease;
+    }
+    .track:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px #4caf50bb;
+    }
+    .track h3 {
+      margin-bottom: 0.3rem;
+      color: #a5d6a7;
+      font-weight: 700;
+    }
+    .track p {
+      margin: 0 0 0.8rem 0;
+      font-style: italic;
+      color: #c8e6c9;
+    }
+    audio {
+      width: 100%;
+      outline: none;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #4caf50bb;
+      background-color: #111;
+    }
+    #no-results {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #888;
+      margin-top: 2rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎵 God's Appointed Music Player</h1>
+
+  <div id="search-container">
+    <input type="text" id="searchInput" placeholder="Search songs e.g. hillsong, praise, worship..." />
+    <button id="searchBtn">Search</button>
+  </div>
+
+  <div id="tracks">Type a search term and click Search to find songs.</div>
+
+  <script src="/G.A.N.G/music/js/music.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+    "title": "Goodness of God",
+    "speaker": "Junior",
+    "folder_name": "Goodness_of_God_Junior_20250803222123",
+    "member_id": 1,
+    "sermon_id": 6,
+    "started_at": "2025-08-04 00:22:23",
+    "completed_at": "2025-08-04 00:22:24",
+    "total_chunks": 2,
+    "total_duration_seconds": 1502,
+    "total_size_bytes": 985279,
+    "chunk_files": [
+        {
+            "filename": "chunk_000.webm",
+            "index": 0,
+            "size": 984035
+        },
+        {
+            "filename": "chunk_001.webm",
+            "index": 1,
+            "size": 1244
+        }
+    ]
+}

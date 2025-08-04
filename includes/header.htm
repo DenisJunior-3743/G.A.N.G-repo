@@ -1,0 +1,64 @@
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container">
+   <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+  <img src="/G.A.N.G/assets/logo.png" alt="G.A.N.G Logo" class="gang-logo me-2">
+  <div class="d-flex flex-column lh-sm">
+    <span class="text-white" style="font-size: 1.1rem;">God’s Appointed</span>
+    <span class="text-white" style="font-size: 1rem;">New Generation</span>
+  </div>
+</a>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+  <ul class="navbar-nav">
+
+        <li class="nav-item"><a class="nav-link active" href="/G.A.N.G/home/home.htm">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/G.A.N.G/admin/sermon/view_sermons.php">Sermons</a></li>
+        <li class="nav-item"><a class="nav-link" href="/G.A.N.G/bible/bible.htm">Bible Reading</a></li>
+        <li class="nav-item"><a class="nav-link" href="/G.A.N.G/music/you_tube_music.htm">Music</a></li>
+        <li class="nav-item"><a class="nav-link" href="/G.A.N.G/discussion/discussion.htm">Discussions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/G.A.N.G/announcements.html">Announcements</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown">
+            More
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="enquiries.html">Enquiries</a></li>
+            <li><a class="dropdown-item" href="uploads.html">Uploads</a></li>
+            <li><a class="dropdown-item" href="viewing.html">Media Viewing</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <button class="btn btn-outline-light me-2" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+        </li>
+        <li class="nav-item guest-only">
+          <a class="nav-link" href="/G.A.N.G/auth/login.html">Login</a>
+        </li>
+        <li class="nav-item guest-only">
+          <a class="nav-link" href="/G.A.N.G/registration/signup.html">Sign Up</a>
+        </li>
+        <li class="nav-item dropdown auth-required" style="display:none;">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="fas fa-user me-1"></i><span class="user-info">Username</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+            <li class="minister-only" style="display:none;"><a class="dropdown-item" href="admin.html">Admin Panel</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item logout-btn">Logout</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

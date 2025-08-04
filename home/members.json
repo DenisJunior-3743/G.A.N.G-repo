@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Denis Junior",
+    "image": "images/Denis.jpg",
+    "description": "Bible teacher and the group leader.",
+    "details": "Denis has been a pivotal figure in the youth ministry, focusing on teaching and leadership development."
+  },
+  {
+    "name": "Arimu Mariam",
+    "image": "images/Mariam.jpg",
+    "description": "Prophet.",
+    "details": "Mariam has served in the youth ministry for over 5 years with a focus on spiritual mentorship, worship leadership, and pastoral care."
+  },
+  {
+    "name": "Chick Bae",
+    "image": "images/Unit.jpg",
+    "description": "Counselor.",
+    "details": "Chick has been instrumental in providing guidance and support to the youth, emphasizing emotional well-being and spiritual growth."
+  }
+]
