@@ -6,6 +6,11 @@
   <title>Bible Reading - G.A.N.G</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
+   <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
+    
   <style>
     body { padding-top: 80px; }
     .verse { margin-bottom: 1rem; padding: 0.5rem 1rem; background: #f9f9f9; border-left: 4px solid #007bff; }
@@ -13,6 +18,10 @@
   </style>
 </head>
 <body>
+
+<div id="header"></div>
+
+<?php include dirname(__DIR__,1) . '/includes/welcome_section.php'; ?>
 
   <!-- HEADER -->
   <div class="container">
@@ -82,9 +91,10 @@
   </div>
 </div>
 
+<div id="footer"></div>
   <!-- Bootstrap & JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+  <script src="/G.A.N.G/includes/js/include.js"></script>  
   
   <script src="/G.A.N.G/bible/js/bible.js"></script>
 </body>

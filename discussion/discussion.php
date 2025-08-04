@@ -17,22 +17,13 @@ if (!isset($_SESSION['user_id'])) {
   <title>Discussion - G.A.N.G</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+  <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+  <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #007bff;
-      --secondary-color: #6c757d;
-      --success-color: #28a745;
-      --danger-color: #dc3545;
-      --light-bg: #f8f9fa;
-      --dark-bg: #343a40;
-      --message-bg-current: linear-gradient(135deg, #007bff, #0056b3);
-      --message-bg-other: #ffffff;
-      --border-radius: 18px;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
+    /* Discussion-specific styles */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-light);
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
@@ -42,15 +33,15 @@ if (!isset($_SESSION['user_id'])) {
     }
 
     .chat-container {
-      background: white;
+      background: var(--heaven-white);
       border-radius: 20px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-medium);
       overflow: hidden;
     }
 
     .chat-header {
-      background: var(--message-bg-current);
-      color: white;
+      background: var(--gradient-primary);
+      color: var(--heaven-white);
       padding: 1rem 1.5rem;
       border-radius: 20px 20px 0 0;
     }
@@ -59,7 +50,7 @@ if (!isset($_SESSION['user_id'])) {
       height: 500px;
       overflow-y: auto;
       padding: 1rem;
-      background: #f8f9fa;
+      background: var(--soft-white);
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -333,6 +324,10 @@ if (!isset($_SESSION['user_id'])) {
   </style>
 </head>
 <body>
+
+<div id="header"></div>
+<?php include dirname(__DIR__, 2) . '/includes/welcome_section.php'; ?>
+
   <div class="container py-4">
     <!-- Discussion Topic Creation -->
     <div class="card mb-4 chat-container">
@@ -433,9 +428,11 @@ if (!isset($_SESSION['user_id'])) {
     </div>
   </div>
 
+  <div id="footer"></div>
   <!-- JS & Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/G.A.N.G/includes/js/include.js"></script>
   
   <script>
     // Global variables

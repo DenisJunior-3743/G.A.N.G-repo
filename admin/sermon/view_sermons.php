@@ -149,65 +149,47 @@ function getPreacherAvatar($picture, $gender, $name) {
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --hover-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            --border-radius: 15px;
-            --text-primary: #2c3e50;
-            --text-secondary: #6c757d;
-            --whatsapp-green: #25d366;
-            --audio-bg: #f0f2f5;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-primary);
-        }
-
+        /* Sermon-specific styles */
         .page-header {
-            background: var(--primary-gradient);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
             padding: 40px 0;
             margin-bottom: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-medium);
         }
 
         .search-filters {
-            background: white;
+            background: var(--heaven-white);
             padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             margin-bottom: 30px;
         }
 
         .sermon-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: var(--heaven-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             margin-bottom: 30px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: none;
         }
 
         .sermon-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--hover-shadow);
+            box-shadow: var(--shadow-medium);
         }
 
         .sermon-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
             padding: 25px;
             position: relative;
             overflow: hidden;
@@ -230,6 +212,7 @@ function getPreacherAvatar($picture, $gender, $name) {
             font-weight: bold;
             margin-bottom: 10px;
             line-height: 1.3;
+            color: var(--heaven-white);
         }
 
         .sermon-meta {
@@ -238,6 +221,7 @@ function getPreacherAvatar($picture, $gender, $name) {
             gap: 20px;
             font-size: 0.9rem;
             opacity: 0.9;
+            color: var(--heaven-white);
         }
 
         .sermon-body {
@@ -250,8 +234,8 @@ function getPreacherAvatar($picture, $gender, $name) {
             gap: 15px;
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
+            background: var(--light-blue);
+            border-radius: var(--border-radius);
         }
 
         .preacher-avatar {
@@ -259,18 +243,19 @@ function getPreacherAvatar($picture, $gender, $name) {
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid var(--heaven-white);
+            box-shadow: var(--shadow-soft);
         }
 
         .preacher-info h6 {
             margin: 0;
             font-weight: bold;
-            color: var(--text-primary);
+            color: var(--text-dark);
         }
 
         .preacher-info .text-muted {
             font-size: 0.85rem;
+            color: var(--text-light);
         }
 
         .content-section {
@@ -280,7 +265,7 @@ function getPreacherAvatar($picture, $gender, $name) {
         .section-title {
             font-size: 1.1rem;
             font-weight: bold;
-            color: var(--text-primary);
+            color: var(--text-dark);
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -290,43 +275,45 @@ function getPreacherAvatar($picture, $gender, $name) {
         .audio-list, .slides-list {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            background: #f8f9fa;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            background: var(--soft-white);
         }
 
         .audio-item, .slide-item {
             padding: 15px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.2s;
+            transition: var(--transition);
         }
 
         .audio-item:hover, .slide-item:hover {
-            background-color: #e3f2fd;
+            background-color: var(--light-blue);
         }
 
         .audio-item:last-child, .slide-item:last-child {
             border-bottom: none;
         }
 
-        /* Audio Player Styles - WhatsApp inspired */
+        /* Audio Player Styles - Heaven-inspired */
         .audio-player {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: var(--audio-bg);
+            background: var(--soft-white);
             border-radius: 20px;
             padding: 8px 15px;
             margin: 5px 0;
             max-width: 300px;
             position: relative;
+            border: 1px solid var(--border-light);
         }
 
         .audio-player.playing {
-            background: #e8f5e8;
+            background: var(--light-blue);
+            border-color: var(--accent-blue);
         }
 
         .play-pause-btn {
@@ -334,18 +321,18 @@ function getPreacherAvatar($picture, $gender, $name) {
             height: 40px;
             border-radius: 50%;
             border: none;
-            background: var(--whatsapp-green);
-            color: white;
+            background: var(--success-green);
+            color: var(--heaven-white);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             font-size: 16px;
         }
 
         .play-pause-btn:hover {
-            background: #128c7e;
+            background: #059669;
             transform: scale(1.05);
         }
 
@@ -356,7 +343,7 @@ function getPreacherAvatar($picture, $gender, $name) {
         .audio-waveform {
             flex: 1;
             height: 30px;
-            background: #ddd;
+            background: var(--border-light);
             border-radius: 15px;
             position: relative;
             overflow: hidden;
@@ -365,7 +352,7 @@ function getPreacherAvatar($picture, $gender, $name) {
 
         .audio-progress {
             height: 100%;
-            background: var(--whatsapp-green);
+            background: var(--success-green);
             border-radius: 15px;
             width: 0%;
             transition: width 0.1s ease;
@@ -373,13 +360,13 @@ function getPreacherAvatar($picture, $gender, $name) {
 
         .audio-time {
             font-size: 12px;
-            color: #666;
+            color: var(--text-light);
             min-width: 35px;
             text-align: right;
         }
 
         .mic-icon {
-            color: var(--whatsapp-green);
+            color: var(--success-green);
             font-size: 18px;
             margin-right: 5px;
         }
@@ -390,14 +377,14 @@ function getPreacherAvatar($picture, $gender, $name) {
 
         .file-name {
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text-dark);
             font-size: 0.9rem;
             margin-bottom: 5px;
         }
 
         .file-size {
             font-size: 0.8rem;
-            color: var(--text-secondary);
+            color: var(--text-light);
         }
 
         .download-actions {
@@ -536,6 +523,9 @@ function getPreacherAvatar($picture, $gender, $name) {
 </head>
 
 <body>
+
+<div id="header"></div>
+<?php include dirname(__DIR__, 2) . '/includes/welcome_section.php'; ?>
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
@@ -565,6 +555,8 @@ function getPreacherAvatar($picture, $gender, $name) {
             </div>
         </div>
     </div>
+
+    
 
     <div class="container">
         <!-- Search and Filters -->
@@ -817,8 +809,10 @@ function getPreacherAvatar($picture, $gender, $name) {
         <?php endif; ?>
     </div>
 
+    <div id="footer"></div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/G.A.N.G/includes/js/include.js"></script>
     
     <!-- Audio Player JavaScript -->
     <script>

@@ -5,9 +5,10 @@
   <title>God's Appointed YouTube Music Player</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/G.A.N.G/includes/css/header.css">
-  <link rel="stylesheet" href="/G.A.N.G/includes/css/footer.css">
-
+   <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
+    
   <style>
     :root {
       --bg-light: #f0f0f0;
@@ -225,6 +226,7 @@
 
 <body>
   <div id="header"></div>
+  <?php include dirname(__DIR__, 1) . '/includes/welcome_section.php'; ?>
 
   <button id="themeToggle" title="Toggle Dark/Light Theme">Light Mode</button>
 

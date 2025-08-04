@@ -149,83 +149,68 @@ function formatTimeAgo($datetime) {
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --hover-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            --border-radius: 15px;
-            --text-primary: #2c3e50;
-            --text-secondary: #6c757d;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-primary);
-        }
+        /* Announcement-specific styles */
 
         .page-header {
-            background: var(--primary-gradient);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
             padding: 40px 0;
             margin-bottom: 30px;
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            box-shadow: var(--shadow-medium);
         }
 
         .search-filters {
-            background: white;
+            background: var(--heaven-white);
             padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             margin-bottom: 30px;
         }
 
         .announcement-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: var(--heaven-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             margin-bottom: 25px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: none;
             position: relative;
         }
 
         .announcement-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--hover-shadow);
+            box-shadow: var(--shadow-medium);
         }
 
         .announcement-card.high-priority {
-            border-left: 5px solid #dc3545;
+            border-left: 5px solid var(--danger-red);
         }
 
         .announcement-card.normal-priority {
-            border-left: 5px solid #007bff;
+            border-left: 5px solid var(--primary-blue);
         }
 
         .announcement-card.low-priority {
-            border-left: 5px solid #6c757d;
+            border-left: 5px solid var(--text-light);
         }
 
         .announcement-header {
             padding: 25px;
-            border-bottom: 1px solid #e9ecef;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--gradient-light);
         }
 
         .announcement-title {
             font-size: 1.4rem;
             font-weight: bold;
-            color: var(--text-primary);
+            color: var(--text-dark);
             margin-bottom: 10px;
             line-height: 1.3;
         }
@@ -235,7 +220,7 @@ function formatTimeAgo($datetime) {
             flex-wrap: wrap;
             gap: 15px;
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: var(--text-light);
         }
 
         .announcement-body {
@@ -264,23 +249,24 @@ function formatTimeAgo($datetime) {
         .author-details h6 {
             margin: 0;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text-dark);
             font-size: 0.95rem;
         }
 
         .author-details .text-muted {
             font-size: 0.8rem;
+            color: var(--text-light);
         }
 
         .announcement-content {
             line-height: 1.6;
-            color: var(--text-primary);
+            color: var(--text-dark);
             font-size: 1rem;
         }
 
         .event-date {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -292,9 +278,9 @@ function formatTimeAgo($datetime) {
         .no-announcements {
             text-align: center;
             padding: 80px 20px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: var(--heaven-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
         }
 
         .pagination {
@@ -306,13 +292,13 @@ function formatTimeAgo($datetime) {
             border-radius: 8px;
             margin: 0 4px;
             border: none;
-            color: #667eea;
+            color: var(--primary-blue);
         }
 
         .pagination .page-link:hover,
         .pagination .page-item.active .page-link {
-            background: var(--primary-gradient);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
         }
 
         .badge {
@@ -321,9 +307,9 @@ function formatTimeAgo($datetime) {
         }
 
         .stats-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: var(--heaven-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             padding: 20px;
             margin-bottom: 30px;
         }
@@ -336,13 +322,13 @@ function formatTimeAgo($datetime) {
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
-            color: #667eea;
+            color: var(--primary-blue);
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: var(--text-light);
             text-transform: uppercase;
         }
 
@@ -361,6 +347,11 @@ function formatTimeAgo($datetime) {
 </head>
 
 <body>
+
+<div id="header"></div>
+
+<?php include dirname(__DIR__, 2) . '/includes/welcome_section.php'; ?>
+
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
@@ -382,6 +373,8 @@ function formatTimeAgo($datetime) {
             </div>
         </div>
     </div>
+
+    
 
     <div class="container">
         <!-- Search and Filters -->
@@ -530,7 +523,10 @@ function formatTimeAgo($datetime) {
         <?php endif; ?>
     </div>
 
+    <div id="footer"></div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/G.A.N.G/includes/js/include.js"></script>
 </body>
 </html> 

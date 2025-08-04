@@ -94,75 +94,60 @@ function getPreacherAvatar($picture, $gender, $name) {
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
+    <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --hover-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            --border-radius: 15px;
-            --text-primary: #2c3e50;
-            --text-secondary: #6c757d;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-primary);
-        }
+        /* Create announcement-specific styles */
 
         .page-header {
-            background: var(--primary-gradient);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--heaven-white);
             padding: 40px 0;
             margin-bottom: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-medium);
         }
 
         .form-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: var(--heaven-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-soft);
             padding: 30px;
             margin-bottom: 30px;
         }
 
         .form-label {
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text-dark);
             margin-bottom: 8px;
         }
 
         .form-control, .form-select {
             border-radius: 10px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border-light);
             padding: 12px 15px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
         }
 
         .btn-primary {
-            background: var(--primary-gradient);
+            background: var(--gradient-primary);
             border: none;
             border-radius: 25px;
             padding: 12px 30px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-medium);
         }
 
         .priority-badge {
@@ -173,23 +158,23 @@ function getPreacherAvatar($picture, $gender, $name) {
         }
 
         .priority-high {
-            background: #ffebee;
-            color: #c62828;
+            background: #fee2e2;
+            color: var(--danger-red);
         }
 
         .priority-normal {
-            background: #e3f2fd;
-            color: #1565c0;
+            background: var(--light-blue);
+            color: var(--primary-blue);
         }
 
         .priority-low {
             background: #f3e5f5;
-            color: #7b1fa2;
+            color: var(--text-light);
         }
 
         .user-info {
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 12px;
+            background: var(--light-blue);
+            border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 25px;
         }
@@ -199,8 +184,8 @@ function getPreacherAvatar($picture, $gender, $name) {
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid var(--heaven-white);
+            box-shadow: var(--shadow-soft);
         }
 
         .alert {
@@ -224,6 +209,11 @@ function getPreacherAvatar($picture, $gender, $name) {
 </head>
 
 <body>
+
+<div id="header"></div>
+
+<?php include dirname(__DIR__, 2) . '/includes/welcome_section.php'; ?>
+
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
@@ -245,6 +235,8 @@ function getPreacherAvatar($picture, $gender, $name) {
             </div>
         </div>
     </div>
+
+   
 
     <div class="container">
         <!-- Success/Error Messages -->
@@ -354,9 +346,11 @@ function getPreacherAvatar($picture, $gender, $name) {
         </div>
     </div>
 
+
+    <div id="footer"></div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="/G.A.N.G/includes/js/include.js"></script>
     <script>
         // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];

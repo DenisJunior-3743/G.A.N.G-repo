@@ -1,95 +1,181 @@
 <?php
-// Welcome Section Component
-// This should be included after the header for logged-in users
-
 // Check if user is logged in
-$is_logged_in = isset($_SESSION['member_id']);
-$welcome_message = '';
-$user_display_name = '';
+$is_logged_in = isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 
 if ($is_logged_in) {
-    $first_name = $_SESSION['first_name'] ?? '';
-    $second_name = $_SESSION['second_name'] ?? '';
-    $third_name = $_SESSION['third_name'] ?? '';
+    $user_id = $_SESSION['user_id'];
+    $user_name = $_SESSION['first_name'] . ' ' . $_SESSION['second_name'];
     $user_picture = $_SESSION['picture'] ?? '';
-    $gender = $_SESSION['gender'] ?? '';
-    $role = $_SESSION['role'] ?? '';
+    $gender = $_SESSION['gender'] ?? 'Male';
     
-    $user_display_name = trim($first_name . ' ' . $second_name . ' ' . $third_name);
-    
-    // Generate welcome message based on time of day
+    // Get time-based greeting
     $hour = date('H');
     if ($hour < 12) {
-        $welcome_message = "Good morning";
+        $greeting = "Good Morning";
     } elseif ($hour < 17) {
-        $welcome_message = "Good afternoon";
+        $greeting = "Good Afternoon";
     } else {
-        $welcome_message = "Good evening";
+        $greeting = "Good Evening";
     }
     
-    $welcome_message .= ", " . $user_display_name;
+    $user_display_name = trim($user_name);
 }
 
-function getDefaultAvatar($gender, $name) {
+// Unique function names for welcome section to avoid conflicts
+function getWelcomeDefaultAvatar($gender, $name) {
     $initial = strtoupper(substr($name, 0, 1));
-    $bg_color = $gender === 'Female' ? '#e91e63' : '#2196f3';
+    $bg_color = ($gender === 'Female') ? '#e91e63' : '#2196f3';
     return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='$bg_color'/%3E%3Ctext x='50' y='65' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3E$initial%3C/text%3E%3C/svg%3E";
 }
 
-function getUserAvatar($picture, $gender, $name) {
+function getWelcomeUserAvatar($picture, $gender, $name) {
     $path = $_SERVER['DOCUMENT_ROOT'] . '/G.A.N.G/registration/profile_pics/' . basename($picture);
     if (!empty($picture) && file_exists($path)) {
         return '/G.A.N.G/registration/profile_pics/' . basename($picture);
     }
-    return getDefaultAvatar($gender, $name);
+    return getWelcomeDefaultAvatar($gender, $name);
 }
 ?>
 
-    <!-- Welcome Section (only shown for logged-in users) -->
-    <?php if ($is_logged_in): ?>
-    <div class="welcome-section" id="welcomeSection">
-        <style>
-            .welcome-section {
-                margin-top: 30px;
-            }
-        </style>
+<!-- Welcome Section (only shown for logged-in users) -->
+<?php if ($is_logged_in): ?>
+<div class="welcome-section" id="welcomeSection">
+    <style>
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 0;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-section .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .welcome-message h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        
+        .welcome-message p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .profile-container {
+            position: relative;
+        }
+        
+        .profile-picture-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-picture-wrapper:hover {
+            transform: scale(1.05);
+        }
+        
+        .profile-picture {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 8px 0;
+            min-width: 150px;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .profile-dropdown.show {
+            display: block;
+        }
+        
+        .profile-dropdown a {
+            display: block;
+            padding: 8px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+        
+        .profile-dropdown a:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+        
+        .current-profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-wrapper .btn {
+            width: 100%;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+    </style>
+    
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <div class="welcome-content">
-                    <h2 class="welcome-message">
-                        <i class="bi bi-sunrise me-2"></i><?php echo htmlspecialchars($welcome_message); ?>
-                    </h2>
-                    <p class="welcome-subtitle">
-                        Welcome to God's Appointed New Generation. We're glad to have you here!
-                    </p>
-                </div>
+        <div class="col-md-8">
+            <div class="welcome-message">
+                <h4><?php echo $greeting; ?>, <?php echo htmlspecialchars($user_display_name); ?>!</h4>
+                <p>Welcome back to G.A.N.G. We're glad to see you today.</p>
             </div>
-            <div class="col-md-4 text-md-end">
-                <div class="profile-container">
-                    <div class="profile-picture-wrapper" id="profilePictureWrapper">
-                        <img src="<?php echo getUserAvatar($user_picture, $gender, $user_display_name); ?>" 
-                             alt="Profile Picture" 
-                             class="profile-picture" 
-                             id="profilePicture"
-                             data-bs-toggle="dropdown" 
-                             aria-expanded="false">
-                        
-                        <!-- Profile Dropdown Menu -->
-                        <div class="dropdown-menu profile-dropdown" id="profileDropdown">
-                            <div class="dropdown-header">
-                                <strong><?php echo htmlspecialchars($user_display_name); ?></strong>
-                                <small class="text-muted d-block"><?php echo htmlspecialchars($role); ?></small>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
-                                <i class="bi bi-pencil me-2"></i>Update Profile Picture
-                            </button>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/G.A.N.G/auth/login.html">
-                                <i class="bi bi-box-arrow-right me-2"></i>Logout
-                            </a>
-                        </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="profile-container">
+                <div class="profile-picture-wrapper" id="profilePictureWrapper">
+                    <img src="<?php echo getWelcomeUserAvatar($user_picture, $gender, $user_display_name); ?>" 
+                         alt="Profile Picture" 
+                         class="profile-picture" 
+                         id="profilePicture"
+                         onclick="toggleProfileDropdown()">
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" onclick="openProfileModal()">
+                            <i class="fas fa-edit"></i> Update Profile Picture
+                        </a>
                     </div>
                 </div>
             </div>
@@ -97,299 +183,154 @@ function getUserAvatar($picture, $gender, $name) {
     </div>
 </div>
 
-<!-- Update Profile Modal -->
-<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+<!-- Profile Update Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateProfileModalLabel">
-                    <i class="bi bi-person-circle me-2"></i>Update Profile Picture
-                </h5>
+                <h5 class="modal-title" id="profileModalLabel">Update Profile Picture</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="updateProfileForm" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="text-center mb-4">
-                        <div class="current-profile-preview">
-                            <img src="<?php echo getUserAvatar($user_picture, $gender, $user_display_name); ?>" 
-                                 alt="Current Profile" 
-                                 class="current-profile-picture" 
-                                 id="currentProfilePreview">
-                        </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="current-profile-preview">
+                        <img src="<?php echo getWelcomeUserAvatar($user_picture, $gender, $user_display_name); ?>" 
+                             alt="Current Profile" 
+                             class="current-profile-picture" 
+                             id="currentProfilePreview">
                     </div>
-                    
+                </div>
+                <form id="profileUpdateForm" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="newProfilePicture" class="form-label">
-                            <i class="bi bi-camera me-2"></i>Select New Picture
-                        </label>
-                        <input type="file" 
-                               class="form-control" 
-                               id="newProfilePicture" 
-                               name="profile_picture" 
-                               accept="image/*" 
-                               required>
-                        <div class="form-text">Supported formats: JPG, PNG, GIF. Max size: 5MB</div>
-                    </div>
-                    
-                    <div class="mb-3" id="imagePreviewContainer" style="display: none;">
-                        <label class="form-label">Preview:</label>
-                        <div class="text-center">
-                            <img id="imagePreview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                        <label for="profilePictureInput" class="form-label">Choose New Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="profilePictureInput" 
+                                   name="profile_picture" 
+                                   accept="image/*" 
+                                   required>
+                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('profilePictureInput').click()">
+                                <i class="fas fa-upload"></i> Select Image
+                            </button>
                         </div>
+                        <div class="form-text">Supported formats: JPG, PNG, GIF (Max 5MB)</div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="updateProfileBtn">
-                        <i class="bi bi-check-circle me-2"></i>Update Picture
-                    </button>
-                </div>
-            </form>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Profile Picture
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Success/Error Toast -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="profileUpdateToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong class="me-auto" id="toastTitle">Profile Update</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body" id="toastMessage">
-            Profile picture updated successfully!
-        </div>
-    </div>
-</div>
-
-<?php endif; ?>
-
-<style>
-.welcome-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px 0;
-    margin-top: 0; /* No margin since it's attached to the header */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.welcome-message {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 5px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-}
-
-.welcome-subtitle {
-    font-size: 1rem;
-    opacity: 0.9;
-    margin-bottom: 0;
-}
-
-.profile-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.profile-picture-wrapper {
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.profile-picture-wrapper:hover {
-    transform: scale(1.05);
-}
-
-.profile-picture {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(255,255,255,0.3);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-}
-
-.profile-picture:hover {
-    border-color: rgba(255,255,255,0.8);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-}
-
-.profile-dropdown {
-    min-width: 250px;
-    padding: 0;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.dropdown-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.dropdown-item {
-    padding: 12px 20px;
-    transition: background-color 0.2s ease;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-}
-
-.dropdown-item i {
-    width: 16px;
-}
-
-.current-profile-preview {
-    margin-bottom: 20px;
-}
-
-.current-profile-picture {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #e9ecef;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-#imagePreview {
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.toast {
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
-
-@media (max-width: 768px) {
-    .welcome-section {
-        padding: 15px 0;
-        margin-top: 70px;
-    }
-    
-    .welcome-message {
-        font-size: 1.4rem;
-    }
-    
-    .welcome-subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .profile-container {
-        justify-content: center;
-        margin-top: 15px;
-    }
-    
-    .profile-picture {
-        width: 50px;
-        height: 50px;
-    }
-}
-</style>
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Profile picture preview
-    const fileInput = document.getElementById('newProfilePicture');
-    const imagePreview = document.getElementById('imagePreview');
-    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-    const currentProfilePreview = document.getElementById('currentProfilePreview');
+function toggleProfileDropdown() {
+    const dropdown = document.getElementById('profileDropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const wrapper = document.getElementById('profilePictureWrapper');
+    const dropdown = document.getElementById('profileDropdown');
     
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreviewContainer.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                imagePreviewContainer.style.display = 'none';
-            }
-        });
-    }
-    
-    // Form submission
-    const updateProfileForm = document.getElementById('updateProfileForm');
-    if (updateProfileForm) {
-        updateProfileForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const updateBtn = document.getElementById('updateProfileBtn');
-            const originalText = updateBtn.innerHTML;
-            
-            // Show loading state
-            updateBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
-            updateBtn.disabled = true;
-            
-            fetch('/G.A.N.G/includes/update_profile.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update profile pictures
-                    const profilePicture = document.getElementById('profilePicture');
-                    if (profilePicture) {
-                        profilePicture.src = data.picture_url;
-                    }
-                    if (currentProfilePreview) {
-                        currentProfilePreview.src = data.picture_url;
-                    }
-                    
-                    // Show success message
-                    showToast('Success!', data.message, 'success');
-                    
-                    // Close modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('updateProfileModal'));
-                    modal.hide();
-                    
-                    // Reset form
-                    updateProfileForm.reset();
-                    imagePreviewContainer.style.display = 'none';
-                } else {
-                    showToast('Error!', data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Error!', 'An error occurred while updating your profile picture.', 'error');
-            })
-            .finally(() => {
-                // Reset button state
-                updateBtn.innerHTML = originalText;
-                updateBtn.disabled = false;
-            });
-        });
-    }
-    
-    function showToast(title, message, type) {
-        const toast = document.getElementById('profileUpdateToast');
-        const toastTitle = document.getElementById('toastTitle');
-        const toastMessage = document.getElementById('toastMessage');
-        
-        toastTitle.textContent = title;
-        toastMessage.textContent = message;
-        
-        // Update toast appearance based on type
-        toast.className = `toast ${type === 'success' ? 'bg-success text-white' : 'bg-danger text-white'}`;
-        
-        // Show toast
-        const bsToast = new bootstrap.Toast(toast);
-        bsToast.show();
+    if (!wrapper.contains(event.target)) {
+        dropdown.classList.remove('show');
     }
 });
-</script> 
+
+function openProfileModal() {
+    const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+    modal.show();
+    document.getElementById('profileDropdown').classList.remove('show');
+}
+
+// Handle file input change
+document.getElementById('profilePictureInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Preview the selected image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentProfilePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Handle form submission
+document.getElementById('profileUpdateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('user_id', '<?php echo $user_id; ?>');
+    
+    fetch('/G.A.N.G/includes/update_profile.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the profile picture in the welcome section
+            document.getElementById('profilePicture').src = data.picture_url;
+            
+            // Show success toast
+            showToast('Profile picture updated successfully!', 'success');
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('profileUpdateForm').reset();
+            document.getElementById('currentProfilePreview').src = '<?php echo getWelcomeUserAvatar($user_picture, $gender, $user_display_name); ?>';
+        } else {
+            showToast(data.message || 'Failed to update profile picture', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('An error occurred while updating profile picture', 'error');
+    });
+});
+
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toastId = 'toast-' + Date.now();
+    
+    const toastHtml = `
+        <div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'primary'} border-0" 
+             role="alert" 
+             aria-live="assertive" 
+             aria-atomic="true" 
+             id="${toastId}">
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    `;
+    
+    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+    
+    const toastElement = document.getElementById(toastId);
+    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+    toast.show();
+    
+    // Remove toast element after it's hidden
+    toastElement.addEventListener('hidden.bs.toast', function() {
+        toastElement.remove();
+    });
+}
+</script>
+<?php endif; ?> 
