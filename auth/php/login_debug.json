@@ -1,12 +1,12 @@
 {
-    "user_id": 1,
-    "username": "Denis",
-    "role": "admin",
-    "member_id": 1,
-    "first_name": "Denis",
-    "second_name": "Junior",
-    "third_name": "Dan",
-    "email": "denisjunior3743@gmail.com",
-    "gender": "Male",
-    "picture": "\/G.A.N.G\/registration\/profile_pics\/profile_688e283785c531.32438575.jpg"
+    "user_id": 2,
+    "username": "Grace",
+    "role": "mobilizer",
+    "member_id": 2,
+    "first_name": "Namaganda",
+    "second_name": "Grace",
+    "third_name": "",
+    "email": "grace@gmail.com",
+    "gender": "Female",
+    "picture": null
 }

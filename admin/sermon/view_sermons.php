@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once dirname(__DIR__, 2) . '/config/database.php';
+require_once dirname(__DIR__, 2) . 
+'/config/database.php';
 
 if (!isset($_SESSION['member_id'])) {
     header('Location: /G.A.N.G/auth/login.html');
@@ -55,7 +56,7 @@ try {
     $total_pages = ceil($total_sermons / $per_page);
 
     $sermons_query = "
-        SELECT s.*, m.first_name, m.second_name, m.third_name, m.picture as member_picture, m.gender
+        SELECT s.*, s.folder_name as sermon_folder_name, m.first_name, m.second_name, m.third_name, m.picture as member_picture, m.gender
         FROM sermons s
         LEFT JOIN members m ON s.member_id = m.id
         $where_clause
@@ -73,6 +74,8 @@ try {
 
     $sermons_stmt->execute();
     $sermons = $sermons_stmt->fetchAll();
+    
+
 
     foreach ($sermons as &$sermon) {
         $sermon_id = $sermon['id'];
@@ -133,7 +136,6 @@ function getPreacherAvatar($picture, $gender, $name) {
     return getDefaultAvatar($gender, $name);
 }
 
-
 ?>
 
 
@@ -160,6 +162,8 @@ function getPreacherAvatar($picture, $gender, $name) {
             --border-radius: 15px;
             --text-primary: #2c3e50;
             --text-secondary: #6c757d;
+            --whatsapp-green: #25d366;
+            --audio-bg: #f0f2f5;
         }
 
         body {
@@ -174,7 +178,7 @@ function getPreacherAvatar($picture, $gender, $name) {
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
         }
 
@@ -284,7 +288,7 @@ function getPreacherAvatar($picture, $gender, $name) {
         }
 
         .audio-list, .slides-list {
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             border: 1px solid #e9ecef;
             border-radius: 8px;
@@ -292,10 +296,10 @@ function getPreacherAvatar($picture, $gender, $name) {
         }
 
         .audio-item, .slide-item {
-            padding: 12px 15px;
+            padding: 15px;
             border-bottom: 1px solid #e9ecef;
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             transition: background-color 0.2s;
         }
@@ -308,6 +312,78 @@ function getPreacherAvatar($picture, $gender, $name) {
             border-bottom: none;
         }
 
+        /* Audio Player Styles - WhatsApp inspired */
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--audio-bg);
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin: 5px 0;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .audio-player.playing {
+            background: #e8f5e8;
+        }
+
+        .play-pause-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--whatsapp-green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .play-pause-btn:hover {
+            background: #128c7e;
+            transform: scale(1.05);
+        }
+
+        .play-pause-btn:active {
+            transform: scale(0.95);
+        }
+
+        .audio-waveform {
+            flex: 1;
+            height: 30px;
+            background: #ddd;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .audio-progress {
+            height: 100%;
+            background: var(--whatsapp-green);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .audio-time {
+            font-size: 12px;
+            color: #666;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .mic-icon {
+            color: var(--whatsapp-green);
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
         .file-info {
             flex: 1;
         }
@@ -316,6 +392,7 @@ function getPreacherAvatar($picture, $gender, $name) {
             font-weight: 500;
             color: var(--text-primary);
             font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
         .file-size {
@@ -394,6 +471,22 @@ function getPreacherAvatar($picture, $gender, $name) {
             color: white;
         }
 
+        /* Loading animation for audio */
+        .audio-loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--whatsapp-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .sermon-meta {
@@ -413,6 +506,10 @@ function getPreacherAvatar($picture, $gender, $name) {
             .stats-row {
                 flex-wrap: wrap;
                 gap: 15px;
+            }
+
+            .audio-player {
+                max-width: 100%;
             }
         }
 
@@ -443,11 +540,19 @@ function getPreacherAvatar($picture, $gender, $name) {
     <div class="page-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <h1 class="mb-2"><i class="bi bi-collection-play me-3"></i>Sermon Library</h1>
-                    <p class="mb-0">Browse and download recorded sermons with audio chunks and presentation slides</p>
+                    <p class="mb-0">Browse and listen to recorded sermons with audio chunks and presentation slides</p>
                 </div>
-                <div class="col-md-4 text-md-end">
+                <div class="col-md-3 text-center">
+                    <a href="/G.A.N.G/admin/sermon/record-sermon.php" class="btn btn-light btn-lg">
+                        <i class="bi bi-mic-fill me-2"></i>Record Sermon
+                    </a>
+                    <a href="/G.A.N.G/admin/announcements/view_announcements.php" class="btn btn-outline-light btn-lg ms-2">
+                        <i class="bi bi-megaphone me-2"></i>Announcements
+                    </a>
+                </div>
+                <div class="col-md-3 text-md-end">
                     <div class="d-flex align-items-center justify-content-md-end gap-3">
                         <img src="<?php echo getPreacherAvatar($user_picture, $gender, $first_name); ?>" 
                              alt="User Avatar" class="rounded-circle" width="50" height="50">
@@ -504,175 +609,183 @@ function getPreacherAvatar($picture, $gender, $name) {
                         <a href="?" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-x-circle me-2"></i>Clear Filters
                         </a>
-                        <span class="ms-3 text-muted">
-                            Found <?php echo $total_sermons; ?> sermon(s)
-                        </span>
                     </div>
                 <?php endif; ?>
             </form>
         </div>
 
         <!-- Sermons List -->
+        <?php if (isset($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error_message); ?>
+            </div>
+        <?php endif; ?>
+
         <?php if (empty($sermons)): ?>
             <div class="no-sermons">
-                <i class="bi bi-collection display-1 text-muted mb-4"></i>
+                <i class="bi bi-collection-play" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
                 <h3>No Sermons Found</h3>
                 <p class="text-muted">
                     <?php if ($search || $speaker_filter || $date_filter): ?>
                         No sermons match your current filters. Try adjusting your search criteria.
                     <?php else: ?>
-                        There are no recorded sermons available at the moment.
+                        No sermons have been uploaded yet. Check back later for new content.
                     <?php endif; ?>
                 </p>
-                <div class="mt-4">
-                    <a href="/G.A.N.G/admin/sermon/record-sermon.php" class="btn btn-primary btn-lg me-3">
-                        <i class="bi bi-mic-fill me-2"></i>Record New Sermon
-                    </a>
-                    <?php if ($search || $speaker_filter || $date_filter): ?>
-                        <a href="?" class="btn btn-outline-secondary btn-lg">
-                            <i class="bi bi-arrow-clockwise me-2"></i>Clear Filters
-                        </a>
-                    <?php endif; ?>
-                </div>
             </div>
         <?php else: ?>
-            <!-- Sermons Grid -->
-            <div class="row">
-                <?php foreach ($sermons as $sermon): ?>
-                    <div class="col-lg-6 col-xl-4">
-                        <div class="sermon-card" data-sermon-id="<?php echo $sermon['id']; ?>">
-                            <!-- Sermon Header -->
-                            <div class="sermon-header">
-                                <div class="sermon-title"><?php echo htmlspecialchars($sermon['title']); ?></div>
-                                <div class="sermon-meta">
-                                    <span><i class="bi bi-calendar3 me-1"></i><?php echo date('M j, Y', strtotime($sermon['created_at'])); ?></span>
-                                    <span><i class="bi bi-clock me-1"></i><?php echo formatDuration($sermon['total_duration_seconds'] ?? 0); ?></span>
-                                    <span><i class="bi bi-hdd me-1"></i><?php echo formatFileSize($sermon['total_size_bytes'] ?? 0); ?></span>
-                                </div>
-                            </div>
-
-                            <!-- Sermon Body -->
-                            <div class="sermon-body">
-                                <!-- Preacher Profile -->
-                                <div class="preacher-profile">
-                                    <img src="<?php echo getPreacherAvatar($sermon['member_picture'], $sermon['gender'], $sermon['first_name']); ?>" 
-                                         alt="Preacher Avatar" class="preacher-avatar">
-                                    <div class="preacher-info">
-                                        <h6><?php echo htmlspecialchars(trim($sermon['first_name'] . ' ' . $sermon['second_name'])); ?></h6>
-                                        <div class="text-muted">
-                                            Speaker: <?php echo htmlspecialchars($sermon['speaker'] ?? 'Unknown'); ?>
-                                        </div>
-                                        <div class="text-muted">
-                                            Status: <span class="badge bg-<?php echo $sermon['status'] === 'completed' ? 'success' : 'warning'; ?>">
-                                                <?php echo ucfirst($sermon['status'] ?? 'Unknown'); ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Statistics -->
-                                <div class="stats-row">
-                                    <div class="stat-item">
-                                        <div class="stat-number"><?php echo $sermon['chunk_count']; ?></div>
-                                        <div class="stat-label">Audio Files</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-number"><?php echo $sermon['slide_count']; ?></div>
-                                        <div class="stat-label">Slides</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-number"><?php echo formatFileSize($sermon['total_audio_size'] + $sermon['total_slides_size']); ?></div>
-                                        <div class="stat-label">Total Size</div>
-                                    </div>
-                                </div>
-
-                                <!-- Audio Files Section -->
-                                <?php if (!empty($sermon['audio_chunks'])): ?>
-                                    <div class="content-section">
-                                        <div class="section-title">
-                                            <i class="bi bi-music-note-beamed text-success"></i>
-                                            Audio Files (<?php echo count($sermon['audio_chunks']); ?>)
-                                        </div>
-                                        <div class="audio-list">
-                                            <?php foreach ($sermon['audio_chunks'] as $index => $chunk): ?>
-                                                <div class="audio-item">
-                                                    <div class="file-info">
-                                                        <div class="file-name">
-                                                            <i class="bi bi-file-earmark-music me-2"></i>
-                                                            Chunk <?php echo $index + 1; ?> - <?php echo htmlspecialchars($chunk['filename']); ?>
-                                                        </div>
-                                                        <div class="file-size"><?php echo formatFileSize($chunk['file_size']); ?></div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- Slides Section -->
-                                <?php if (!empty($sermon['slides'])): ?>
-                                    <div class="content-section">
-                                        <div class="section-title">
-                                            <i class="bi bi-file-earmark-slides text-info"></i>
-                                            Presentation Slides (<?php echo count($sermon['slides']); ?>)
-                                        </div>
-                                        <div class="slides-list">
-                                            <?php foreach ($sermon['slides'] as $slide): ?>
-                                                <div class="slide-item">
-                                                    <div class="file-info">
-                                                        <div class="file-name">
-                                                            <i class="bi bi-file-earmark-<?php echo strpos($slide['file_type'], 'pdf') !== false ? 'pdf' : 'image'; ?> me-2"></i>
-                                                            <?php echo htmlspecialchars($slide['original_filename']); ?>
-                                                        </div>
-                                                        <div class="file-size"><?php echo formatFileSize($slide['file_size']); ?></div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-
-                                <!-- Download Actions -->
-                                <div class="download-actions">
-                                    <?php if (!empty($sermon['audio_chunks'])): ?>
-                                        <a href="/G.A.N.G/admin/sermon/download.php?type=audio&sermon_id=<?php echo $sermon['id']; ?>" 
-                                           class="btn btn-success btn-download">
-                                            <i class="bi bi-download me-2"></i>Download Audio
-                                        </a>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($sermon['slides'])): ?>
-                                        <a href="/G.A.N.G/admin/sermon/download.php?type=slides&sermon_id=<?php echo $sermon['id']; ?>" 
-                                           class="btn btn-info btn-download">
-                                            <i class="bi bi-download me-2"></i>Download Slides
-                                        </a>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($sermon['audio_chunks']) && !empty($sermon['slides'])): ?>
-                                        <a href="/G.A.N.G/admin/sermon/download.php?type=complete&sermon_id=<?php echo $sermon['id']; ?>" 
-                                           class="btn btn-primary btn-download">
-                                            <i class="bi bi-download me-2"></i>Download Complete
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+            <?php foreach ($sermons as $sermon): ?>
+                <div class="sermon-card">
+                    <!-- Sermon Header -->
+                    <div class="sermon-header">
+                        <div class="sermon-title"><?php echo htmlspecialchars($sermon['title']); ?></div>
+                        <div class="sermon-meta">
+                            <span><i class="bi bi-person me-1"></i><?php echo htmlspecialchars($sermon['speaker']); ?></span>
+                            <span><i class="bi bi-calendar me-1"></i><?php echo date('M j, Y', strtotime($sermon['created_at'])); ?></span>
+                            <span><i class="bi bi-clock me-1"></i><?php echo date('g:i A', strtotime($sermon['created_at'])); ?></span>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+
+                    <div class="sermon-body">
+                        <!-- Preacher Profile -->
+                        <?php if (!empty($sermon['first_name'])): ?>
+                            <div class="preacher-profile">
+                                <img src="<?php echo getPreacherAvatar($sermon['member_picture'], $sermon['gender'], $sermon['first_name']); ?>" 
+                                     alt="Preacher Avatar" class="preacher-avatar">
+                                <div class="preacher-info">
+                                    <h6><?php echo htmlspecialchars($sermon['first_name'] . ' ' . $sermon['second_name'] . ' ' . $sermon['third_name']); ?></h6>
+                                    <div class="text-muted">Preacher</div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Statistics -->
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-number"><?php echo $sermon['chunk_count']; ?></div>
+                                <div class="stat-label">Audio Chunks</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number"><?php echo $sermon['slide_count']; ?></div>
+                                <div class="stat-label">Slides</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number"><?php echo formatFileSize($sermon['total_audio_size']); ?></div>
+                                <div class="stat-label">Audio Size</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number"><?php echo formatFileSize($sermon['total_slides_size']); ?></div>
+                                <div class="stat-label">Slides Size</div>
+                            </div>
+                        </div>
+                        
+
+
+                        <!-- Audio Chunks with Player -->
+                        <?php if (!empty($sermon['audio_chunks'])): ?>
+                            <div class="content-section">
+                                <div class="section-title">
+                                    <i class="bi bi-music-note-beamed text-success"></i>
+                                    Audio Chunks (<?php echo count($sermon['audio_chunks']); ?>)
+                                </div>
+                                <div class="audio-list">
+                                    <?php foreach ($sermon['audio_chunks'] as $index => $chunk): ?>
+                                        <div class="audio-item">
+                                            <div class="file-info">
+                                                <div class="file-name">
+                                                    <i class="bi bi-mic mic-icon"></i>
+                                                    Chunk <?php echo $chunk['chunk_index'] + 1; ?>
+                                                </div>
+                                                <div class="file-size"><?php echo formatFileSize($chunk['file_size']); ?></div>
+                                                
+                                                <!-- Audio Player -->
+                                                <div class="audio-player" data-sermon-id="<?php echo $sermon['id']; ?>" data-chunk-index="<?php echo $index; ?>">
+                                                    <button class="play-pause-btn" onclick="toggleAudio(this)">
+                                                        <i class="bi bi-play-fill"></i>
+                                                    </button>
+                                                    <div class="audio-waveform" onclick="seekAudio(this, event)">
+                                                        <div class="audio-progress"></div>
+                                                    </div>
+                                                    <div class="audio-time">0:00</div>
+                                                    <div class="audio-loading"></div>
+                                                </div>
+                                                
+                                                <!-- Hidden audio element -->
+                                                <audio preload="none" style="display: none;">
+                                                                                                    <?php 
+                                                $folder_name = $sermon['sermon_folder_name'] ?? '';
+                                                $audio_path = "/G.A.N.G/admin/sermon/audio/" . htmlspecialchars($folder_name) . "/" . htmlspecialchars($chunk['filename']);
+                                                ?>
+                                                <source src="<?php echo $audio_path; ?>" type="audio/webm">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Presentation Slides -->
+                        <?php if (!empty($sermon['slides'])): ?>
+                            <div class="content-section">
+                                <div class="section-title">
+                                    <i class="bi bi-file-earmark-slides text-info"></i>
+                                    Presentation Slides (<?php echo count($sermon['slides']); ?>)
+                                </div>
+                                <div class="slides-list">
+                                    <?php foreach ($sermon['slides'] as $slide): ?>
+                                        <div class="slide-item">
+                                            <div class="file-info">
+                                                <div class="file-name"><?php echo htmlspecialchars($slide['original_filename']); ?></div>
+                                                <div class="file-size"><?php echo formatFileSize($slide['file_size']); ?></div>
+                                            </div>
+                                            <?php 
+                                            $folder_name = $sermon['sermon_folder_name'] ?? '';
+                                            $slide_path = "/G.A.N.G/admin/sermon/audio/" . htmlspecialchars($folder_name) . "/slides/" . htmlspecialchars($slide['saved_filename']);
+                                            ?>
+                                            <a href="<?php echo $slide_path; ?>" 
+                                               class="btn btn-sm btn-outline-info" target="_blank">
+                                                <i class="bi bi-eye me-1"></i>View
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Download Actions -->
+                        <div class="download-actions">
+                            <?php if (!empty($sermon['audio_chunks'])): ?>
+                                <a href="/G.A.N.G/admin/sermon/download.php?type=audio&sermon_id=<?php echo $sermon['id']; ?>" 
+                                   class="btn btn-success btn-download">
+                                    <i class="bi bi-download me-2"></i>Download All Audio
+                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($sermon['slides'])): ?>
+                                <a href="/G.A.N.G/admin/sermon/download.php?type=slides&sermon_id=<?php echo $sermon['id']; ?>" 
+                                   class="btn btn-info btn-download">
+                                    <i class="bi bi-download me-2"></i>Download All Slides
+                                </a>
+                            <?php endif; ?>
+                            
+                            <a href="/G.A.N.G/admin/sermon/download.php?type=complete&sermon_id=<?php echo $sermon['id']; ?>" 
+                               class="btn btn-primary btn-download">
+                                <i class="bi bi-archive me-2"></i>Download Complete Package
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
 
             <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
-                <nav aria-label="Sermon pagination">
+                <nav aria-label="Sermons pagination">
                     <ul class="pagination">
                         <?php if ($page > 1): ?>
                             <li class="page-item">
-                                <a class="page-link" href="?page=1<?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $speaker_filter ? '&speaker=' . urlencode($speaker_filter) : ''; ?><?php echo $date_filter ? '&date=' . urlencode($date_filter) : ''; ?>">
-                                    <i class="bi bi-chevron-double-left"></i>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?php echo $page-1; ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $speaker_filter ? '&speaker=' . urlencode($speaker_filter) : ''; ?><?php echo $date_filter ? '&date=' . urlencode($date_filter) : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&speaker=<?php echo urlencode($speaker_filter); ?>&date=<?php echo urlencode($date_filter); ?>">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
@@ -681,10 +794,11 @@ function getPreacherAvatar($picture, $gender, $name) {
                         <?php
                         $start_page = max(1, $page - 2);
                         $end_page = min($total_pages, $page + 2);
+                        
                         for ($i = $start_page; $i <= $end_page; $i++):
                         ?>
-                            <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                                <a class="page-link" href="?page=<?php echo $i; ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $speaker_filter ? '&speaker=' . urlencode($speaker_filter) : ''; ?><?php echo $date_filter ? '&date=' . urlencode($date_filter) : ''; ?>">
+                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&speaker=<?php echo urlencode($speaker_filter); ?>&date=<?php echo urlencode($date_filter); ?>">
                                     <?php echo $i; ?>
                                 </a>
                             </li>
@@ -692,13 +806,8 @@ function getPreacherAvatar($picture, $gender, $name) {
 
                         <?php if ($page < $total_pages): ?>
                             <li class="page-item">
-                                <a class="page-link" href="?page=<?php echo $page+1; ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $speaker_filter ? '&speaker=' . urlencode($speaker_filter) : ''; ?><?php echo $date_filter ? '&date=' . urlencode($date_filter) : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&speaker=<?php echo urlencode($speaker_filter); ?>&date=<?php echo urlencode($date_filter); ?>">
                                     <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?php echo $total_pages; ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $speaker_filter ? '&speaker=' . urlencode($speaker_filter) : ''; ?><?php echo $date_filter ? '&date=' . urlencode($date_filter) : ''; ?>">
-                                    <i class="bi bi-chevron-double-right"></i>
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -706,262 +815,145 @@ function getPreacherAvatar($picture, $gender, $name) {
                 </nav>
             <?php endif; ?>
         <?php endif; ?>
-
-        <!-- Footer Actions -->
-        <div class="text-center mt-5 mb-4">
-            <a href="/G.A.N.G/admin/sermon/record-sermon.php" class="btn btn-primary btn-lg me-3">
-                <i class="bi bi-mic-fill me-2"></i>Record New Sermon
-            </a>
-            <a href="/G.A.N.G/admin/dashboard.php" class="btn btn-outline-secondary btn-lg">
-                <i class="bi bi-house me-2"></i>Back to Dashboard
-            </a>
-        </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JavaScript -->
+    
+    <!-- Audio Player JavaScript -->
     <script>
-        // Enhanced functionality for sermon display page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Smooth scrolling for audio and slide lists
-            const scrollableElements = document.querySelectorAll('.audio-list, .slides-list');
-            scrollableElements.forEach(element => {
-                element.addEventListener('scroll', function() {
-                    this.classList.add('scrolling');
-                    clearTimeout(this.scrollTimer);
-                    this.scrollTimer = setTimeout(() => {
-                        this.classList.remove('scrolling');
-                    }, 150);
-                });
-            });
+        let currentlyPlaying = null;
+        let audioElements = new Map();
 
-            // Download progress indication
-            const downloadButtons = document.querySelectorAll('.btn-download');
-            downloadButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    const originalText = this.innerHTML;
-                    
-                    // Show loading state
-                    this.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Preparing Download...';
-                    this.disabled = true;
-                    
-                    // Reset after 3 seconds (download should start by then)
-                    setTimeout(() => {
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                    }, 3000);
-                });
-            });
+        function toggleAudio(button) {
+            const player = button.closest('.audio-player');
+            const audioElement = player.parentElement.querySelector('audio');
+            const playIcon = button.querySelector('i');
+            const progressBar = player.querySelector('.audio-progress');
+            const timeDisplay = player.querySelector('.audio-time');
+            const loading = player.querySelector('.audio-loading');
 
-            // Search input enhancement
-            let searchTimeout;
-            const searchInput = document.querySelector('input[name="search"]');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    
-                    searchTimeout = setTimeout(() => {
-                        if (this.value.length >= 3 || this.value.length === 0) {
-                            // Auto-submit after 1 second of no typing (optional)
-                            // this.closest('form').submit();
-                        }
-                    }, 1000);
-                });
+            // Stop any currently playing audio
+            if (currentlyPlaying && currentlyPlaying !== audioElement) {
+                pauseAudio(currentlyPlaying);
             }
 
-            // Sermon card hover effects
-            const sermonCards = document.querySelectorAll('.sermon-card');
-            sermonCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    const avatar = this.querySelector('.preacher-avatar');
-                    if (avatar) {
-                        avatar.style.transform = 'scale(1.1)';
-                    }
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    const avatar = this.querySelector('.preacher-avatar');
-                    if (avatar) {
-                        avatar.style.transform = 'scale(1)';
-                    }
-                });
-            });
+            if (audioElement.paused) {
+                // Show loading
+                loading.style.display = 'block';
+                button.style.display = 'none';
 
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Ctrl/Cmd + K to focus search
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    const searchInput = document.querySelector('input[name="search"]');
-                    if (searchInput) {
-                        searchInput.focus();
-                    }
+                // Load and play audio
+                if (audioElement.readyState === 0) {
+                    audioElement.load();
                 }
-                
-                // ESC to clear search
-                if (e.key === 'Escape') {
-                    const searchInput = document.querySelector('input[name="search"]');
-                    if (searchInput) {
-                        searchInput.value = '';
-                        searchInput.focus();
-                    }
-                }
-            });
 
-            // Touch gestures for mobile
-            let startX, startY, endX, endY;
-            
-            sermonCards.forEach(card => {
-                card.addEventListener('touchstart', function(e) {
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
+                audioElement.play().then(() => {
+                    // Hide loading, show pause button
+                    loading.style.display = 'none';
+                    button.style.display = 'flex';
+                    playIcon.className = 'bi bi-pause-fill';
+                    player.classList.add('playing');
+                    currentlyPlaying = audioElement;
+
+                    // Set up event listeners if not already done
+                    if (!audioElements.has(audioElement)) {
+                        setupAudioListeners(audioElement, progressBar, timeDisplay, button, player);
+                        audioElements.set(audioElement, true);
+                    }
+                }).catch((error) => {
+                    console.error('Error playing audio:', error);
+                    loading.style.display = 'none';
+                    button.style.display = 'flex';
                 });
-
-                card.addEventListener('touchend', function(e) {
-                    endX = e.changedTouches[0].clientX;
-                    endY = e.changedTouches[0].clientY;
-                    
-                    const deltaX = endX - startX;
-                    const deltaY = endY - startY;
-                    
-                    // Swipe left to download audio
-                    if (deltaX < -100 && Math.abs(deltaY) < 50) {
-                        const audioBtn = this.querySelector('.btn-download');
-                        if (audioBtn) {
-                            audioBtn.click();
-                        }
-                    }
-                    
-                    // Swipe right to download complete
-                    if (deltaX > 100 && Math.abs(deltaY) < 50) {
-                        const completeBtn = this.querySelector('.btn-primary.btn-download');
-                        if (completeBtn) {
-                            completeBtn.click();
-                        }
-                    }
-                });
-            });
-
-            // Statistics animation on scroll
-            const observerOptions = {
-                threshold: 0.5,
-                rootMargin: '0px'
-            };
-
-            const statObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const statNumbers = entry.target.querySelectorAll('.stat-number');
-                        statNumbers.forEach((statNumber, index) => {
-                            setTimeout(() => {
-                                statNumber.style.transform = 'scale(1.2)';
-                                statNumber.style.color = '#667eea';
-                                setTimeout(() => {
-                                    statNumber.style.transform = 'scale(1)';
-                                }, 200);
-                            }, index * 100);
-                        });
-                        statObserver.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.stats-row').forEach(function(row) {
-                statObserver.observe(row);
-            });
-
-            // Card fade-in animation observer
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        cardObserver.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            // Apply initial styles and observe cards
-            sermonCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                card.style.transitionDelay = `${index * 0.1}s`;
-                cardObserver.observe(card);
-            });
-        });
-
-        // Utility functions
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            notification.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Auto dismiss after 5 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 5000);
+            } else {
+                pauseAudio(audioElement);
+            }
         }
 
-        // Error handling for downloads
-        window.addEventListener('error', function(e) {
-            if (e.target && e.target.classList && e.target.classList.contains('btn-download')) {
-                showNotification('Download failed. Please try again.', 'danger');
+        function pauseAudio(audioElement) {
+            audioElement.pause();
+            const player = audioElement.parentElement.querySelector('.audio-player');
+            const button = player.querySelector('.play-pause-btn');
+            const playIcon = button.querySelector('i');
+            
+            playIcon.className = 'bi bi-play-fill';
+            player.classList.remove('playing');
+            
+            if (currentlyPlaying === audioElement) {
+                currentlyPlaying = null;
+            }
+        }
+
+        function setupAudioListeners(audioElement, progressBar, timeDisplay, button, player) {
+            audioElement.addEventListener('timeupdate', () => {
+                if (audioElement.duration) {
+                    const progress = (audioElement.currentTime / audioElement.duration) * 100;
+                    progressBar.style.width = progress + '%';
+                    timeDisplay.textContent = formatTime(audioElement.currentTime);
+                }
+            });
+
+            audioElement.addEventListener('ended', () => {
+                const playIcon = button.querySelector('i');
+                playIcon.className = 'bi bi-play-fill';
+                player.classList.remove('playing');
+                progressBar.style.width = '0%';
+                timeDisplay.textContent = '0:00';
+                currentlyPlaying = null;
+            });
+
+            audioElement.addEventListener('loadedmetadata', () => {
+                timeDisplay.textContent = formatTime(audioElement.duration);
+            });
+
+            audioElement.addEventListener('error', (e) => {
+                console.error('Audio error:', e);
+                const loading = player.querySelector('.audio-loading');
+                loading.style.display = 'none';
+                button.style.display = 'flex';
+            });
+        }
+
+        function seekAudio(waveform, event) {
+            const player = waveform.closest('.audio-player');
+            const audioElement = player.parentElement.querySelector('audio');
+            
+            if (audioElement.duration) {
+                const rect = waveform.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const percentage = clickX / rect.width;
+                const newTime = percentage * audioElement.duration;
+                
+                audioElement.currentTime = newTime;
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+        }
+
+        // Pause all audio when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && currentlyPlaying) {
+                pauseAudio(currentlyPlaying);
             }
         });
 
-        // Print sermon functionality
-        function printSermon(sermonId) {
-            const sermonCard = document.querySelector(`[data-sermon-id="${sermonId}"]`);
-            if (!sermonCard) return;
-            
-            const printWindow = window.open('', '_blank');
-            const sermonTitle = sermonCard.querySelector('.sermon-title').textContent;
-            
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Sermon: ${sermonTitle}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                        .sermon-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #333; }
-                        .section { margin-bottom: 20px; }
-                        .section-title { font-size: 18px; font-weight: bold; color: #667eea; margin-bottom: 10px; }
-                        .file-list { margin-left: 20px; }
-                        .file-item { margin-bottom: 5px; }
-                        .preacher-info { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-                        @media print {
-                            body { margin: 0; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="sermon-title">${sermonTitle}</div>
-                    ${sermonCard.innerHTML.replace(/<button[^>]*>.*?<\/button>/g, '').replace(/<a[^>]*class="btn[^"]*"[^>]*>.*?<\/a>/g, '')}
-                    <div style="margin-top: 30px; font-size: 12px; color: #666;">
-                        Printed on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
-                    </div>
-                </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && currentlyPlaying && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                const player = currentlyPlaying.parentElement.querySelector('.audio-player');
+                const button = player.querySelector('.play-pause-btn');
+                toggleAudio(button);
+            }
+        });
     </script>
 </body>
 </html>
+
