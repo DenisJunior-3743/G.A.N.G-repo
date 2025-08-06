@@ -7,7 +7,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-
    <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
@@ -48,7 +47,8 @@
 
               <div class="mb-3 position-relative">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" class="form-control" name="password" required>
+                <!-- FIXED: Changed name from "password" to "password_hash" -->
+                <input type="password" id="password" class="form-control" name="password_hash" required>
                 <i class="fas fa-eye toggle-password" id="togglePassword"></i>
               </div>
 
@@ -81,21 +81,32 @@
       this.classList.toggle('fa-eye-slash');
     });
 
-    // AJAX login submission
-   $('#loginForm').on('submit', function (e) {
+    // AJAX login submission with enhanced debugging
+$('#loginForm').on('submit', function (e) {
   e.preventDefault();
+
+  // Debug: Log form data
+  const formData = $(this).serialize();
+  console.log('Form data being sent:', formData);
 
   $.ajax({
     url: '/G.A.N.G/auth/php/login.php',
     method: 'POST',
-    data: $(this).serialize(),
-    dataType: 'json', // Expect JSON response
+    data: formData,
+    dataType: 'json',
     success: function (response) {
+      console.log('Full server response:', response); // Enhanced debug log
+      
       if (response.success) {
+        // DEBUG: Log role and redirect URL
+        console.log('User role:', response.debug_role);
+        console.log('Redirect URL:', response.redirect);
+        
         $('#loginMsg').removeClass('alert-danger').addClass('alert-success')
-          .text('Login successful. Redirecting...').fadeIn();
+          .text(`Login successful as ${response.debug_role || 'user'}. Redirecting...`).fadeIn();
 
         setTimeout(() => {
+          console.log('Redirecting to:', response.redirect);
           window.location.href = response.redirect;
         }, 2500);
       } else {
@@ -106,7 +117,14 @@
           .fadeIn();
       }
     },
-    error: function () {
+    error: function (xhr, status, error) {
+      console.error('AJAX Error:', { 
+        xhr: xhr, 
+        status: status, 
+        error: error,
+        responseText: xhr.responseText 
+      });
+      
       $('#loginMsg')
         .removeClass('alert-success')
         .addClass('alert-danger')

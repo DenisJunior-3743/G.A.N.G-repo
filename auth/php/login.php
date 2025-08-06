@@ -4,7 +4,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $password = $_POST['password_hash'] ?? '';
 
     if (!$username || !$password) {
         echo json_encode(['success' => false, 'message' => 'Please fill in all fields.']);
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT 
                                     u.id, 
                                     u.username, 
-                                    u.password, 
+                                    u.password_hash, 
                                     u.role_id, 
                                     u.member_id,
                                     r.role_name, 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['password_hash'])) {
             // Password correct: Start session
             $_SESSION['user_id']     = $user['id'];
             $_SESSION['username']    = $user['username'];
@@ -50,17 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Log session data
             file_put_contents(__DIR__ . '/login_debug.json', json_encode($_SESSION, JSON_PRETTY_PRINT));
 
-            // Redirection
-            switch ($user['role_name']) {
+            // BEST SOLUTION: Case-insensitive comparison
+            switch (strtolower($user['role_name'])) {
                 case 'admin':
+                    $redirect = '/G.A.N.G/admin/admin.php';
+                    break;
                 case 'mobilizer':
                     $redirect = '/G.A.N.G/discussion/discussion.php';
                     break;
                 case 'member':
-                    $redirect = '../../sermon.html';
+                    $redirect = '/G.A.N.G/sermon.html';
                     break;
                 default:
-                    $redirect = '../../index.html';
+                    $redirect = '/G.A.N.G/index.html';
             }
 
             echo json_encode(['success' => true, 'redirect' => $redirect]);

@@ -18,11 +18,11 @@ try {
     $existing = $stmt->fetch();
 
     if ($existing) {
-      $update = $pdo->prepare("UPDATE users SET username = ?, password = ?, role_id = ? WHERE member_id = ?");
+      $update = $pdo->prepare("UPDATE users SET username = ?, password_hash = ?, role_id = ? WHERE member_id = ?");
       $update->execute([$username, $password, $role_id, $member_id]);
       echo json_encode(['success' => true, 'message' => 'User credentials updated successfully.']);
     } else {
-      $insert = $pdo->prepare("INSERT INTO users (member_id, username, password, role_id) VALUES (?, ?, ?, ?)");
+      $insert = $pdo->prepare("INSERT INTO users (member_id, username, password_hash, role_id) VALUES (?, ?, ?, ?)");
       $insert->execute([$member_id, $username, $password, $role_id]);
       echo json_encode(['success' => true, 'message' => 'User credentials assigned successfully.']);
     }

@@ -165,17 +165,25 @@ function getWelcomeUserAvatar($picture, $gender, $name) {
             </div>
         </div>
         <div class="col-md-4 text-md-end">
-            <div class="profile-container">
-                <div class="profile-picture-wrapper" id="profilePictureWrapper">
-                    <img src="<?php echo getWelcomeUserAvatar($user_picture, $gender, $user_display_name); ?>" 
-                         alt="Profile Picture" 
-                         class="profile-picture" 
-                         id="profilePicture"
-                         onclick="toggleProfileDropdown()">
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <a href="#" onclick="openProfileModal()">
-                            <i class="fas fa-edit"></i> Update Profile Picture
-                        </a>
+            <div class="d-flex align-items-center justify-content-end gap-3">
+                <!-- Fullscreen Toggle Button -->
+                <button class="btn btn-outline-light btn-sm" id="fullscreenToggle" onclick="toggleFullscreen()" title="Toggle Fullscreen View">
+                    <i class="fas fa-expand" id="fullscreenIcon"></i>
+                </button>
+                
+                <!-- Profile Container -->
+                <div class="profile-container">
+                    <div class="profile-picture-wrapper" id="profilePictureWrapper">
+                        <img src="<?php echo getWelcomeUserAvatar($user_picture, $gender, $user_display_name); ?>" 
+                             alt="Profile Picture" 
+                             class="profile-picture" 
+                             id="profilePicture"
+                             onclick="toggleProfileDropdown()">
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <a href="#" onclick="openProfileModal()">
+                                <i class="fas fa-edit"></i> Update Profile Picture
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,6 +239,64 @@ function getWelcomeUserAvatar($picture, $gender, $name) {
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+// Fullscreen toggle functionality
+let isFullscreen = false;
+
+function toggleFullscreen() {
+    const header = document.getElementById('header');
+    const footer = document.getElementById('footer');
+    const welcomeSection = document.getElementById('welcomeSection');
+    const body = document.body;
+    const icon = document.getElementById('fullscreenIcon');
+    
+    isFullscreen = !isFullscreen;
+    
+    if (isFullscreen) {
+        // Hide header and footer
+        if (header) header.style.display = 'none';
+        if (footer) footer.style.display = 'none';
+        if (welcomeSection) welcomeSection.style.display = 'none';
+        
+        // Add fullscreen class to body
+        body.classList.add('fullscreen-mode');
+        
+        // Change icon to compress
+        icon.className = 'fas fa-compress';
+        
+        // Store original scroll position
+        window.fullscreenScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Scroll to top for better experience
+        window.scrollTo(0, 0);
+    } else {
+        // Show header and footer
+        if (header) header.style.display = '';
+        if (footer) footer.style.display = '';
+        if (welcomeSection) welcomeSection.style.display = '';
+        
+        // Remove fullscreen class from body
+        body.classList.remove('fullscreen-mode');
+        
+        // Change icon back to expand
+        icon.className = 'fas fa-expand';
+        
+        // Restore scroll position
+        if (window.fullscreenScrollTop !== undefined) {
+            window.scrollTo(0, window.fullscreenScrollTop);
+        }
+    }
+}
+
+// Keyboard shortcut for fullscreen toggle (F11 or Escape)
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F11') {
+        e.preventDefault();
+        toggleFullscreen();
+    } else if (e.key === 'Escape' && isFullscreen) {
+        toggleFullscreen();
+    }
+});
+
 function toggleProfileDropdown() {
     const dropdown = document.getElementById('profileDropdown');
     dropdown.classList.toggle('show');

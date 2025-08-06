@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Fallbacks for demo/testing
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['user_id'] = 1;
+    $_SESSION['second_name'] = 'John';
+    $_SESSION['picture'] = '/uploads/users/default.jpg'; // Replace with actual image path
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

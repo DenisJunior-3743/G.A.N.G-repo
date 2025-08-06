@@ -1,12 +1,12 @@
 {
-    "user_id": 2,
-    "username": "Grace",
-    "role": "mobilizer",
-    "member_id": 2,
-    "first_name": "Namaganda",
-    "second_name": "Grace",
+    "user_id": 1,
+    "username": "Denis",
+    "role": "Admin",
+    "member_id": 1,
+    "first_name": "Denis",
+    "second_name": "Junior",
     "third_name": "",
-    "email": "grace@gmail.com",
-    "gender": "Female",
-    "picture": null
+    "email": "denisjunior3743@gmail.com",
+    "gender": "Male",
+    "picture": "profile_6892524b79cf9_1754419787.jpg"
 }
