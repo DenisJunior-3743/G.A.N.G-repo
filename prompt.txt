@@ -1,0 +1,19 @@
+Our focus is on front end and styling. Review each CSS file and find a solution for what we’re going to do and specify me which CSS does what. Ensure we only reference to the CSS files that are necessary and ensure no conflicts among the CSS in one page.
+I want the welcome_section.php to have uniform style with the header and get attached to it and also be static, hope you get, it shouldn’t scroll, just like the header is static, then when we toggle hide, only hide the header and footer but mot welcome_section.php
+You see we included welcome_section.php on most of the pages but its not appearing well. We need to improve it. In the following files its partially appearing, so we need to add padding that pulls it alittle bit down so that we have proper alignment:  header, followed by welcome_section.php, then body of another page.
+In these ones, its showing but needs padding downwards: View_sermons.php, record-sermon.php, you_tube_music.php, discussion.php
+In these ones ones, its there but not showing at all , it seems its hiddedn within the header: create_announcement.php, view_announcement.php 
+
+Then our focus will also be on footer display within some pages. In the following, i want the footer to occupy full width left to right, so fix it in these pages: Signup.html, Discussion.php,you_tube_music.php ,view_sermons.php, record-sermon.php.
+-	Ensure the toggle in welcome_section.php hides only the header and the footer, but not the sermon_section.php coz if this happens, our user can’t navigate or can’t trigger back the navigation section
+-	Ensure the footer covers full width like the header does across all pages
+-	Observe my admin.php well, its not looking well, we need to improve the style
+-	Focus on CSS, dont affect the backend, just style. Ensure the home.htm, view_sermons.php, bible.php, you_tube_music.php, discussion.php, view_announcements.php, create_sermon.php, signup.html, login.html, record-sermon.php all are uniform in CSS with heaven blue color like in home.htm
+-	We can have unique style for header, welcome_sermon.php and footer have unique styles for easy view,, then the body of the pages also uniform. So lets emphasize the color consistence. Besides, lets ensure the elements of the pages are visible and nice looking, and add feelings and responsiveness maybe upon click and hovering.
+-	Ensure proper alignment ,,, header on top, followed by welcome_section.php then the body of other pages follow. There are so many conflicts in that
+-	Ensure names of our header buttons dont break like Bible reading, let these all be in the same line
+-	
+
+Then our you_tube_music.php has a light mode toggler, lets remove it and activate the one we have in the header,, 
+
+Lets first strictly work on those

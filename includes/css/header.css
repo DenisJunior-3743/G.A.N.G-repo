@@ -1,0 +1,190 @@
+/* G.A.N.G Header Styles - Heaven-like Theme */
+:root {
+  --primary-blue: #1e3a8a;
+  --secondary-blue: #3b82f6;
+  --light-blue: #dbeafe;
+  --accent-blue: #60a5fa;
+  --heaven-white: #ffffff;
+  --soft-white: #f8fafc;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --success-green: #10b981;
+  --warning-orange: #f59e0b;
+  --danger-red: #ef4444;
+  --border-light: #e2e8f0;
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+  --gradient-heaven: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Navbar Styling */
+.navbar {
+  background: var(--gradient-primary) !important;
+  box-shadow: var(--shadow-medium);
+  border-bottom: 3px solid var(--accent-blue);
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-nav .nav-link {
+  color: var(--heaven-white) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem !important;
+  border-radius: 8px;
+  margin: 0 0.25rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--heaven-white) !important;
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--heaven-white);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+  width: 80%;
+}
+
+/* Dropdown Styling */
+.dropdown-menu {
+  background: var(--heaven-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+}
+
+.dropdown-item {
+  color: var(--text-dark);
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 0 0.5rem;
+}
+
+.dropdown-item:hover {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+  transform: translateX(5px);
+}
+
+/* Button Styling */
+.btn-outline-light {
+  border: 2px solid var(--heaven-white);
+  color: var(--heaven-white);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background: var(--heaven-white);
+  color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Logo Styling */
+.gang-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--heaven-white);
+  box-shadow: var(--shadow-soft);
+  margin-right: 8px;
+  margin-left: -8px;
+  transition: all 0.3s ease;
+}
+
+.gang-logo:hover {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--accent-blue);
+}
+
+/* User Dropdown */
+.auth-required .dropdown-toggle::after {
+  border-top-color: var(--heaven-white);
+}
+
+.auth-required .dropdown-toggle:hover::after {
+  border-top-color: var(--accent-blue);
+}
+
+/* Theme Toggle Button */
+#themeToggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--heaven-white);
+  color: var(--heaven-white);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.3s ease;
+}
+
+#themeToggle:hover {
+  background: var(--heaven-white);
+  color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .navbar-nav .nav-link {
+    margin: 0.25rem 0;
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .navbar-collapse {
+    background: rgba(30, 58, 138, 0.95);
+    border-radius: 12px;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}
+
+/* Animation for navbar items */
+.navbar-nav .nav-item {
+  animation: fadeInDown 0.5s ease forwards;
+  opacity: 0;
+}
+
+.navbar-nav .nav-item:nth-child(1) { animation-delay: 0.1s; }
+.navbar-nav .nav-item:nth-child(2) { animation-delay: 0.2s; }
+.navbar-nav .nav-item:nth-child(3) { animation-delay: 0.3s; }
+.navbar-nav .nav-item:nth-child(4) { animation-delay: 0.4s; }
+.navbar-nav .nav-item:nth-child(5) { animation-delay: 0.5s; }
+.navbar-nav .nav-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
