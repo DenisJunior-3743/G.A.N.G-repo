@@ -18,10 +18,11 @@ if (!isset($_SESSION['user_id'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 
-   <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+   
     <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
-    
+    <link href="/G.A.N.G/bible/css/bible.css" rel="stylesheet">
+
   <style>
     body { padding-top: 80px; }
     .verse { margin-bottom: 1rem; padding: 0.5rem 1rem; background: #f9f9f9; border-left: 4px solid #007bff; }

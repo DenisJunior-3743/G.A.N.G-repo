@@ -37,12 +37,17 @@ body {
 
 /* Welcome Section Positioning */
 #welcomeSection {
-  position: relative;
+  position: sticky;
+  top: 100px; /* match your header height */
+  width: 100vw; /* full viewport width */
+  left: 0; /* ensure alignment */
   z-index: 999;
-  width: 100%;
+  
   margin: 0;
-  transition: transform 0.3s ease;
+  padding: 0;
 }
+
+
 
 #welcomeSection.hidden {
   transform: translateY(-100%);

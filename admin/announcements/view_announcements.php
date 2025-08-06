@@ -154,7 +154,7 @@ function formatTimeAgo($datetime) {
     <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/layout.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
-    <link href="/G.A.N.G/includes/css/responsive-utilities.css" rel="stylesheet">
+    
     <link href="/G.A.N.G/admin/announcements/css/view_announcement.css" rel="stylesheet">
 
 </head>

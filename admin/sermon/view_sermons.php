@@ -148,7 +148,7 @@ function getPreacherAvatar($picture, $gender, $name) {
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="/G.A.N.G/includes/css/main.css" rel="stylesheet">
+    
     <link href="/G.A.N.G/includes/css/header.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/footer.css" rel="stylesheet">
     <link href="/G.A.N.G/includes/css/layout.css" rel="stylesheet">
